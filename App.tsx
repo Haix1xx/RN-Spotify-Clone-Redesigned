@@ -11,13 +11,14 @@ import {
 import { RootStackParamList } from './screens/RootStackParams'
 import { LoadingSpinner } from './components'
 import { useAppSelector, useAppDispatch } from './hooks/redux-hooks'
-import { Authorize, TrackPlayer } from './screens'
+import { TrackPlayer } from './screens'
 import HomeTabs from './navigation/HomeTabs'
 
 import {
   setTokens,
   requestRefreshedAccessTokenAsync,
 } from './store/slices/authSlice'
+import LoginScreen from './screens/LoginScreen'
 
 const Stack = createStackNavigator<RootStackParamList>()
 
@@ -33,17 +34,17 @@ const App = () => {
     const tryLogin = async () => {
       const authData = await AsyncStorage.getItem('authData')
       if (!authData) return
-      const { accessToken, refreshToken, accessTokenExpirationDate } =
+      const { accessToken } =
         await JSON.parse(authData)
-      if (
-        new Date(accessTokenExpirationDate) <= new Date() ||
-        !accessToken ||
-        !refreshToken
-      ) {
-        dispatch(requestRefreshedAccessTokenAsync(refreshToken))
-        return
-      }
-      dispatch(setTokens({ accessToken, refreshToken }))
+      // if (
+      //   new Date(accessTokenExpirationDate) <= new Date() ||
+      //   !accessToken ||
+      //   !refreshToken
+      // ) {
+      //   dispatch(requestRefreshedAccessTokenAsync(refreshToken))
+      //   return
+      // }
+      dispatch(setTokens({ accessToken }))
     }
     tryLogin()
   }, [dispatch])
@@ -78,7 +79,7 @@ const App = () => {
               />
             </Stack.Group>
           ) : (
-            <Stack.Screen name='Authorize' component={Authorize} />
+            <Stack.Screen name='Authorize' component={LoginScreen} />
           )}
         </Stack.Navigator>
       </NavigationContainer>
