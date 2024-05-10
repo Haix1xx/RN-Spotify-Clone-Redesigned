@@ -12,6 +12,8 @@ const down_arrow = require('../assets/icons/down_arrow.png')
 const repeat = require('../assets/icons/repeat.png')
 const repeat_one = require('../assets/icons/repeat_one.png')
 const search = require('../assets/icons/search.png')
+const eye = require('../assets/icons/eye.png')
+const hideEye = require('../assets/icons/hide_eye.png')
 
 export default {
   search,
@@ -28,4 +30,6 @@ export default {
   explicit,
   play,
   spotifyLogoWhite,
+  eye,
+  hideEye
 }

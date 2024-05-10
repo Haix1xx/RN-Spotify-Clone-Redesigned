@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import { spotifyAuthConfig } from '../../utils/spotifyAuthConfig'
+import { BASE_URL } from '@env'
 
 interface IAuthState {
   accessToken: string
@@ -17,6 +18,10 @@ const initialState: IAuthState = {
   refreshToken: '',
   tokenIsLoading: false,
   error: null,
+}
+interface LoginPayload {
+  email: string;
+  password: string;
 }
 
 const saveTokensToAsyncStorage = (
@@ -73,6 +78,31 @@ export const requestRefreshedAccessTokenAsync = createAsyncThunk(
     }
   }
 )
+export const loginAsync = createAsyncThunk(
+  'auth/login',
+  async ({ email, password }: LoginPayload, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/users/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      console.log("data1", data);
+      dispatch(setTokens({ accessToken: data.token }));
+      // AsyncStorage.setItem('authData', data.token);
+      AsyncStorage.setItem('authData', JSON.stringify({ accessToken: data.token }));
+      return data;
+    } catch (error) {
+      console.log("12");
+      return rejectWithValue((error as any).message);
+    }
+  }
+);
+
 
 const authSlice = createSlice({
   name: 'auth',
