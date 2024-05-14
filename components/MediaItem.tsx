@@ -1,25 +1,25 @@
-import React from 'react'
-import { View, Image, Text, StyleSheet } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import React from "react";
+import { View, Image, Text, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { COLORS, SIZES, FONTS, icons, MEDIA } from '../constants'
-import { trimText, secondsToHHMMSS } from '../utils/helpers'
-import { useAppSelector, useAppDispatch } from '../hooks/redux-hooks'
-import * as trackPlayerActions from '../store/slices/trackPlayerSlice'
+import { COLORS, SIZES, FONTS, icons, MEDIA } from "../constants";
+import { trimText, secondsToHHMMSS } from "../utils/helpers";
+import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
+import * as trackPlayerActions from "../store/slices/trackPlayerSlice";
 
 interface IMediaItem {
-  id: string
-  previewUrl: string
-  name: string
-  albumImages: Array<{ url: string }>
-  artists: Array<{ name: string }>
-  durationMs: number
-  albumName?: string
-  index?: number
-  explicit?: boolean
-  trackNumber?: number
-  type?: string
-  onPress?: () => void
+  id: string;
+  previewUrl: string;
+  name: string;
+  albumImages: Array<{ url: string }>;
+  artists: Array<{ name: string }>;
+  durationMs: number;
+  albumName?: string;
+  index?: number;
+  explicit?: boolean;
+  trackNumber?: number;
+  type?: string;
+  onPress?: () => void;
 }
 
 const MediaItem = ({
@@ -36,15 +36,15 @@ const MediaItem = ({
   type,
   onPress,
 }: IMediaItem) => {
-  const media = useAppSelector((state) => state.media)
-  const trackPlayer = useAppSelector((state) => state.trackPlayer)
-  const dispatch = useAppDispatch()
-  const artistsNames = artists.map((artist) => artist.name).join(', ')
-  const secondsFromMs = durationMs / 1000
-  const isCurrentMediaItem = trackPlayer.currentTrack.url === previewUrl
-  let imageUrl: string | undefined
+  const media = useAppSelector((state) => state.media);
+  const trackPlayer = useAppSelector((state) => state.trackPlayer);
+  const dispatch = useAppDispatch();
+  const artistsNames = artists.map((artist) => artist.name).join(", ");
+  const secondsFromMs = durationMs / 1000;
+  const isCurrentMediaItem = trackPlayer.currentTrack.url === previewUrl;
+  let imageUrl: string | undefined;
   if (albumImages.length > 0)
-    imageUrl = albumImages[0].url !== '' ? albumImages[0].url : undefined
+    imageUrl = albumImages[0].url !== "" ? albumImages[0].url : undefined;
 
   const onMediaItemHandler = async () => {
     const selectedTrack = {
@@ -53,15 +53,16 @@ const MediaItem = ({
       title: name,
       artist: artistsNames,
       artwork: imageUrl ? imageUrl : media.images[0].url,
-    }
+    };
     if (trackPlayer.searchTerm.length > 0) {
-      dispatch(trackPlayerActions.setSearchTerm(''))
+      dispatch(trackPlayerActions.setSearchTerm(""));
     }
-    dispatch(trackPlayerActions.resetPlayerAsync())
-    await dispatch(trackPlayerActions.setCurrentTrackAsync(selectedTrack))
-    if (trackPlayer.isShuffle) dispatch(trackPlayerActions.shuffleTracksAsync())
-    dispatch(trackPlayerActions.playTrackAsync())
-  }
+    dispatch(trackPlayerActions.resetPlayerAsync());
+    await dispatch(trackPlayerActions.setCurrentTrackAsync(selectedTrack));
+    if (trackPlayer.isShuffle)
+      dispatch(trackPlayerActions.shuffleTracksAsync());
+    dispatch(trackPlayerActions.playTrackAsync());
+  };
 
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onMediaItemHandler}>
@@ -83,8 +84,7 @@ const MediaItem = ({
               color: COLORS.lightGray,
               marginRight: 20,
               ...FONTS.body,
-            }}
-          >
+            }}>
             {trackNumber}
           </Text>
         )}
@@ -93,15 +93,14 @@ const MediaItem = ({
             <Text
               style={{
                 color: isCurrentMediaItem ? COLORS.primary : COLORS.white,
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 ...FONTS.body,
-              }}
-            >
+              }}>
               {name && trimText(name, 30)}
             </Text>
           )}
           {artists && (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               {explicit ? (
                 <View style={{ marginRight: 5 }}>
                   <Image style={styles.artistImage} source={icons.explicit} />
@@ -119,7 +118,7 @@ const MediaItem = ({
           )}
         </View>
 
-        <View style={{ flex: 2, alignItems: 'flex-end' }}>
+        <View style={{ flex: 2, alignItems: "flex-end" }}>
           {durationMs > 0 && (
             <Text style={{ color: COLORS.lightGray, ...FONTS.body }}>
               {secondsToHHMMSS(secondsFromMs).slice(1)}
@@ -128,14 +127,14 @@ const MediaItem = ({
         </View>
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   trackItemContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 10,
     paddingHorizontal: SIZES.padding,
     marginBottom: 10,
@@ -151,6 +150,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: 20,
   },
-})
+});
 
-export default MediaItem
+export default MediaItem;

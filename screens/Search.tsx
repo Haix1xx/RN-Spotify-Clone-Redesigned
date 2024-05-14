@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,52 +6,49 @@ import {
   ScrollView,
   TextInput,
   Image,
-} from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Header, LoadingSpinner, TextTitle, SearchItem } from '../components'
+} from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Header, LoadingSpinner, TextTitle, SearchItem } from "../components";
 
-import { SIZES, COLORS, FONTS, icons } from '../constants'
-import { useAppDispatch, useAppSelector } from '../hooks/redux-hooks'
-import * as browseActions from '../store/slices/browseSlice'
-import * as searchActions from '../store/slices/searchSlice'
-import { useDebounce } from '../hooks/useDebounce'
+import { SIZES, COLORS, FONTS, icons } from "../constants";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import * as browseActions from "../store/slices/browseSlice";
+import * as searchActions from "../store/slices/searchSlice";
+import { useDebounce } from "../hooks/useDebounce";
 
 const Search = () => {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [isUserSearching, setIsUserSearching] = useState(false)
-  const browse = useAppSelector((state) => state.browse)
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
-  const search = useAppSelector((state) => state.search)
-  const dispatch = useAppDispatch()
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isUserSearching, setIsUserSearching] = useState(false);
+  const browse = useAppSelector((state) => state.browse);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const search = useAppSelector((state) => state.search);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(browseActions.getBrowseCategories())
-  }, [dispatch])
-
+    dispatch(browseActions.getBrowseCategories());
+  }, [dispatch]);
   useEffect(() => {
     if (debouncedSearchTerm) {
-      dispatch(searchActions.searchItemsAsync(searchTerm))
+      dispatch(searchActions.searchItemsAsync(searchTerm));
     }
-  }, [debouncedSearchTerm])
+  }, [debouncedSearchTerm]);
 
   const searchTermHandler = (input: string) => {
-    setSearchTerm(input)
-    if (input.length > 0) setIsUserSearching(true)
-    else setIsUserSearching(false)
-  }
-
+    setSearchTerm(input);
+    if (input.length > 0) setIsUserSearching(true);
+    else setIsUserSearching(false);
+  };
   const renderSearchResults = () => {
-    if (search.isLoading) return <LoadingSpinner />
+    if (search.isLoading) return <LoadingSpinner />;
     if (!search.results) {
       return (
         <View
           style={{
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
             paddingHorizontal: SIZES.padding,
-          }}
-        >
+          }}>
           <Text style={{ color: COLORS.white, ...FONTS.h1 }}>
             Couldn't find
           </Text>
@@ -60,57 +57,51 @@ const Search = () => {
               color: COLORS.white,
               marginBottom: SIZES.padding,
               ...FONTS.h1,
-            }}
-          >
+            }}>
             "{searchTerm}"
           </Text>
           <Text
             style={{
               color: COLORS.lightGray,
-              textAlign: 'center',
+              textAlign: "center",
               ...FONTS.body,
-            }}
-          >
+            }}>
             Try searching again using a different spelling or keyword
           </Text>
         </View>
-      )
+      );
     }
 
     return (
       <View>
         {search.results
-          .filter((filteredItem) => filteredItem.preview_url !== null)
+          .filter((filteredItem) => filteredItem.url !== null)
           .map((item) => {
             return (
               <SearchItem
                 key={`${item.id}`}
                 searchTerm={searchTerm}
                 id={item.id}
-                type={item.type}
                 album={item.album}
-                images={item.images}
-                name={item.name}
-                artists={item.artists}
-                previewUrl={item.preview_url}
-                durationMs={item.duration_ms}
-                followers={item.followers}
+                title={item.title}
+                url={item.url}
+                duration={item.duration}
+                coverPath={item.coverPath}
               />
-            )
+            );
           })}
       </View>
-    )
-  }
+    );
+  };
 
   const renderCategoryItems = () => {
-    const browseCategories = [...browse.categories]
+    const browseCategories = [...browse.categories];
     return browseCategories.map((category) => {
       return (
         <TouchableOpacity
           key={category.id}
           activeOpacity={0.7}
-          style={{ paddingBottom: SIZES.paddingBottom }}
-        >
+          style={{ paddingBottom: SIZES.paddingBottom }}>
           <View style={styles.cardItemContainer}>
             {category.images
               .slice()
@@ -118,14 +109,13 @@ const Search = () => {
               .map((image, index) => (
                 <View
                   key={`${image.url}-${index}`}
-                  style={styles.cardItemImageContainer}
-                >
+                  style={styles.cardItemImageContainer}>
                   <Image
                     style={styles.cardItemImage}
                     source={
                       image.url
                         ? { uri: image.url }
-                        : require('../assets/images/image-placeholder.png')
+                        : require("../assets/images/image-placeholder.png")
                     }
                   />
                 </View>
@@ -140,9 +130,9 @@ const Search = () => {
             </View>
           </View>
         </TouchableOpacity>
-      )
-    })
-  }
+      );
+    });
+  };
 
   return (
     <View style={styles.searchScreen}>
@@ -168,15 +158,15 @@ const Search = () => {
         </View>
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   searchScreen: {
     flex: 1,
     paddingTop: SIZES.paddingTop,
     backgroundColor: COLORS.black,
-    width: '100%',
+    width: "100%",
   },
   searchContainer: {
     marginHorizontal: SIZES.padding,
@@ -184,9 +174,9 @@ const styles = StyleSheet.create({
     borderColor: COLORS.white,
     borderWidth: 1,
     borderRadius: 50,
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 50,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: SIZES.paddingBottom,
   },
   textInput: {
@@ -204,11 +194,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray3,
     padding: 10,
     borderRadius: 20,
-    flexDirection: 'row-reverse',
+    flexDirection: "row-reverse",
   },
   cardItemImageContainer: {
     width: 30,
-    position: 'relative',
+    position: "relative",
     left: 50,
   },
   cardItemImage: {
@@ -219,7 +209,7 @@ const styles = StyleSheet.create({
   cardItemCategory: {
     width: 185,
     marginRight: 58,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   categoryName: {
     color: COLORS.white,
@@ -231,6 +221,6 @@ const styles = StyleSheet.create({
     width: 25,
     tintColor: COLORS.white,
   },
-})
+});
 
-export default Search
+export default Search;
