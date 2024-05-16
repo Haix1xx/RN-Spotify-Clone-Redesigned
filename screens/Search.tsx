@@ -79,14 +79,18 @@ const Search = () => {
           .map((item) => {
             return (
               <SearchItem
-                key={`${item.id}`}
+                key={`${item._id}`}
                 searchTerm={searchTerm}
-                id={item.id}
+                id={item._id}
                 album={item.album}
                 title={item.title}
                 url={item.url}
                 duration={item.duration}
                 coverPath={item.coverPath}
+                type={item.type}
+                avatar={item.avatar}
+                artist={item?.artist}
+                displayname={item.displayname}
               />
             );
           })}

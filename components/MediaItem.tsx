@@ -26,6 +26,7 @@ const MediaItem = ({
   index,
   id,
   previewUrl,
+  url,
   name,
   albumImages,
   albumName,
@@ -34,26 +35,28 @@ const MediaItem = ({
   explicit,
   trackNumber,
   type,
+  duration,
   onPress,
-}: IMediaItem) => {
+}: any) => {
   const media = useAppSelector((state) => state.media);
   const trackPlayer = useAppSelector((state) => state.trackPlayer);
   const dispatch = useAppDispatch();
-  const artistsNames = artists.map((artist) => artist.name).join(", ");
+  const artistsNames = artists?.profile?.displayname;
   const secondsFromMs = durationMs / 1000;
   const isCurrentMediaItem = trackPlayer.currentTrack.url === previewUrl;
   let imageUrl: string | undefined;
   if (albumImages.length > 0)
     imageUrl = albumImages[0].url !== "" ? albumImages[0].url : undefined;
-
   const onMediaItemHandler = async () => {
     const selectedTrack = {
       id,
-      url: previewUrl,
+      url: url,
       title: name,
       artist: artistsNames,
-      artwork: imageUrl ? imageUrl : media.images[0].url,
+      artwork: imageUrl ? imageUrl : previewUrl,
+      duration: duration,
     };
+    console.log("selectedTrack", JSON.stringify(selectedTrack, null, 2));
     if (trackPlayer.searchTerm.length > 0) {
       dispatch(trackPlayerActions.setSearchTerm(""));
     }
@@ -61,7 +64,7 @@ const MediaItem = ({
     await dispatch(trackPlayerActions.setCurrentTrackAsync(selectedTrack));
     if (trackPlayer.isShuffle)
       dispatch(trackPlayerActions.shuffleTracksAsync());
-    dispatch(trackPlayerActions.playTrackAsync());
+    await dispatch(trackPlayerActions.playTrackAsync());
   };
 
   return (
@@ -96,7 +99,7 @@ const MediaItem = ({
                 fontWeight: "bold",
                 ...FONTS.body,
               }}>
-              {name && trimText(name, 30)}
+              {name && trimText(name || "", 30)}
             </Text>
           )}
           {artists && (

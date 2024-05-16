@@ -122,7 +122,7 @@ const TrackPlayer = ({ navigation }: trackPlayerScreenProps) => {
             <Text style={{ color: COLORS.white, ...FONTS.bodyBold }}>
               {trackPlayer.searchTerm.length > 0
                 ? `"${trackPlayer.searchTerm}" in Songs`
-                : media.name.toUpperCase()}
+                : media.title.toUpperCase()}
             </Text>
           </View>
         </View>

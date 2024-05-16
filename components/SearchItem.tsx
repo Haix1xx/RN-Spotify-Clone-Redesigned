@@ -23,16 +23,18 @@ const SearchItem = ({
   searchTerm,
   duration,
   coverPath,
+  type,
+  avatar,
+  displayname,
 }: Partial<Song> & {
   searchTerm: string;
 }) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<searchItemNavProps>();
-  const type = MEDIA.track;
   let albumImageUrl: string | undefined;
-  if (type === MEDIA.track) {
+  if (type === MEDIA.artist) {
     // albumImageUrl = album.images[0].url;
-    albumImageUrl = coverPath;
+    albumImageUrl = avatar;
   } else {
     // albumImageUrl = images.length > 0 ? images[0].url : "";
     albumImageUrl = coverPath;
@@ -40,7 +42,7 @@ const SearchItem = ({
   const onSearchItemHandler = () => {
     if (type !== MEDIA.track) {
       navigation.navigate("Media", {
-        mediaType: MEDIA.track,
+        mediaType: type,
         mediaId: id,
       });
     } else {
@@ -85,7 +87,7 @@ const SearchItem = ({
           </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ color: COLORS.lightGray, ...FONTS.body }}>
-              {type === MEDIA.track ? "song" : type}
+              {type === MEDIA.artist ? displayname : type}
             </Text>
             {type !== MEDIA.artist && type !== MEDIA.playlist && (
               <>

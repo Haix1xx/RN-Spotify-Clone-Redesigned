@@ -21,13 +21,10 @@ export const searchItemsAsync = createAsyncThunk<
   const accessToken = getState().auth.accessToken;
   const encodeSearchQuery = encodeURIComponent(query);
   try {
-    const response = await fetch(
-      `${BASE_URL}/search?q=${encodeSearchQuery}&type=track%2Cartist%2Calbum%2Cplaylist&limit=5`,
-      {
-        method: "GET",
-        headers: setHeaders(accessToken),
-      },
-    );
+    const response = await fetch(`${BASE_URL}/search?q=${encodeSearchQuery}`, {
+      method: "GET",
+      headers: setHeaders(accessToken),
+    });
     let data = await response.json();
     console.log("data1", JSON.stringify(data, null, 2));
 
