@@ -39,7 +39,7 @@ const Media = ({ route: { params }, navigation }: tracksScreenProps) => {
   const media = useAppSelector((state) => state.media);
   const dispatch = useAppDispatch();
   const { tracks } = media;
-
+  console.log("media", JSON.stringify(media, null, 2));
   useEffect(() => {
     if (mediaType === MEDIA.playlist) {
       dispatch(mediaActions.getPlaylistTracksAsync(mediaId));
@@ -69,7 +69,13 @@ const Media = ({ route: { params }, navigation }: tracksScreenProps) => {
         explicit={item.explicit}
         trackNumber={item.track_number}
         name={item.title}
-        artists={item.artist}
+        artists={
+          item.artist || {
+            profile: {
+              displayname: media.title,
+            },
+          }
+        }
         durationMs={item.duration_ms}
         duration={item.duration}
         albumImages={[]}

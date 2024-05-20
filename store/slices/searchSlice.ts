@@ -26,7 +26,6 @@ export const searchItemsAsync = createAsyncThunk<
       headers: setHeaders(accessToken),
     });
     let data = await response.json();
-    console.log("data1", JSON.stringify(data, null, 2));
 
     return data;
   } catch (error) {
@@ -48,6 +47,7 @@ const searchSlice = createSlice({
         ...(payload.data?.artists || []),
         ...(payload.data?.albums || []),
         ...(payload.data?.tracks || []),
+        ...(payload.data?.playlists || []),
         // ...(payload.data?.playlists.items || []),
       ];
     });

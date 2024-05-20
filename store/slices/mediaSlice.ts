@@ -10,6 +10,7 @@ const getArtistInfo = async (artistId: string, accessToken: string) => {
     headers: setHeaders(accessToken),
   });
   const data = await response.json();
+
   return data;
 };
 
@@ -22,10 +23,13 @@ export const getPlaylistTracksAsync = createAsyncThunk<
   async (playlistId, { getState, rejectWithValue }) => {
     const accessToken = getState().auth.accessToken;
     try {
-      const response = await fetch(`${BASE_URL}/playlists/${playlistId}`, {
-        method: "GET",
-        headers: setHeaders(accessToken),
-      });
+      const response = await fetch(
+        `${BASE_URL}/f-playlists/${playlistId}/tracks`,
+        {
+          method: "GET",
+          headers: setHeaders(accessToken),
+        },
+      );
       const data = await response.json();
       return data;
     } catch (error) {
@@ -60,15 +64,13 @@ export const getArtistTracksAsync = createAsyncThunk<
   const accessToken = getState().auth.accessToken;
   const artistInfo = await getArtistInfo(artistId, accessToken);
   try {
-    const response = await fetch(
-      `${BASE_URL}/artists/${artistId}/top-tracks?market=US`,
-      {
-        method: "GET",
-        headers: setHeaders(accessToken),
-      },
-    );
+    const response = await fetch(`${BASE_URL}/artists/${artistId}/top-tracks`, {
+      method: "GET",
+      headers: setHeaders(accessToken),
+    });
     const data = await response.json();
-    return { ...data, ...artistInfo };
+    console.log("artistInfo", JSON.stringify(artistInfo, null, 2));
+    return { ...data, artist: artistInfo?.data?.data };
   } catch (error) {
     return rejectWithValue(error);
   }
@@ -100,25 +102,28 @@ const mediaSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    //   builder.addCase(getPlaylistTracksAsync.fulfilled, (state, { payload }) => {
-    //     const flattenPlaylistTracks = payload.tracks.items.map((track: any) => {
-    //       return { ...track, ...track.track }
-    //     })
-    //     payload.tracks.items = flattenPlaylistTracks.filter(
-    //       (track: any) => track.preview_url !== null
-    //     )
-    //     return { ...payload, isLoading: false }
-    //   })
-    //   builder.addCase(getPlaylistTracksAsync.pending, (state) => {
-    //     state.isLoading = true
-    //   })
+    builder.addCase(getPlaylistTracksAsync.fulfilled, (state, { payload }) => {
+      const formatPayload = payload.data.data;
+      const filteredTracks = formatPayload.tracks
+        .filter((track: any) => track.preview_url !== null)
+        .map((item: any) => item.track);
+      formatPayload.tracks = filteredTracks;
+      return {
+        ...formatPayload,
+        type: "playlist",
+        followers: { total: 0 },
+        isLoading: false,
+      };
+    });
+    builder.addCase(getPlaylistTracksAsync.pending, (state) => {
+      state.isLoading = true;
+    });
     builder.addCase(getAlbumsTracksAsync.fulfilled, (state, { payload }) => {
       const formatPayload = payload.data.data;
       const filteredTracks = formatPayload.tracks
         .filter((track: any) => track.preview_url !== null)
         .map((item: any) => item.track);
       formatPayload.tracks = filteredTracks;
-
       return {
         ...formatPayload,
         type: "album",
@@ -129,19 +134,26 @@ const mediaSlice = createSlice({
     builder.addCase(getAlbumsTracksAsync.pending, (state) => {
       state.isLoading = true;
     });
-    //   builder.addCase(getArtistTracksAsync.fulfilled, (state, { payload }) => {
-    //     const filteredTracks = payload.tracks.filter(
-    //       (track: any) => track.preview_url !== null
-    //     )
-    //     return {
-    //       ...payload,
-    //       tracks: { items: filteredTracks },
-    //       isLoading: false,
-    //     }
-    //   })
-    //   builder.addCase(getArtistTracksAsync.pending, (state) => {
-    //     state.isLoading = true
-    //   })
+    builder.addCase(getArtistTracksAsync.fulfilled, (state, { payload }) => {
+      const formatPayload = payload.data.data;
+      const filteredTracks = formatPayload.filter(
+        (track: any) => track.preview_url !== null,
+      );
+      formatPayload.tracks = filteredTracks;
+
+      return {
+        ...state,
+        tracks: filteredTracks,
+        coverPath: payload.artist?.avatar,
+        title: payload.artist?.displayname,
+        type: "artist",
+        followers: { total: 0 },
+        isLoading: false,
+      };
+    });
+    builder.addCase(getArtistTracksAsync.pending, (state) => {
+      state.isLoading = true;
+    });
   },
 });
 

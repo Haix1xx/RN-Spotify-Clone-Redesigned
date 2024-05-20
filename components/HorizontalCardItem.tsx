@@ -1,29 +1,29 @@
-import React from 'react'
-import { Text, Image, View, StyleSheet } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import React from "react";
+import { Text, Image, View, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import BulletDot from './BulletDot'
-import { RootStackParamList } from '../screens/RootStackParams'
-import { COLORS, FONTS, SIZES, MEDIA } from '../constants'
-import { trimText } from '../utils/helpers'
+import BulletDot from "./BulletDot";
+import { RootStackParamList } from "../screens/RootStackParams";
+import { COLORS, FONTS, SIZES, MEDIA } from "../constants";
+import { trimText } from "../utils/helpers";
 
-type horizontalCardItemNavProps = StackNavigationProp<RootStackParamList>
+type horizontalCardItemNavProps = StackNavigationProp<RootStackParamList>;
 
 interface IHorizontalCardItem {
-  imageUrl: string | undefined
-  cardLabel?: string
-  cardItemImageStyle?: object
-  cardItemTextStyle?: object
-  cardItemContainerStyle?: object
-  date: string
-  type: string
-  index: number
-  albumName: string
-  albumType: string
-  artists: Array<{ name: string }>
-  id: string
+  imageUrl: string | undefined;
+  cardLabel?: string;
+  cardItemImageStyle?: object;
+  cardItemTextStyle?: object;
+  cardItemContainerStyle?: object;
+  date: string;
+  type: string;
+  index: number;
+  albumName: string;
+  albumType: string;
+  artists: Array<{ name: string }>;
+  id: string;
 }
 
 const HorizontalCardItem = ({
@@ -40,14 +40,14 @@ const HorizontalCardItem = ({
   artists,
   id,
 }: IHorizontalCardItem) => {
-  const navigation = useNavigation<horizontalCardItemNavProps>()
+  const navigation = useNavigation<horizontalCardItemNavProps>();
 
   const onCardItemHandler = () => {
-    navigation.navigate('Media', {
+    navigation.navigate("Media", {
       mediaId: id,
       mediaType: type,
-    })
-  }
+    });
+  };
 
   return (
     <TouchableOpacity
@@ -58,13 +58,12 @@ const HorizontalCardItem = ({
         width: 145,
         marginLeft: index === 0 ? SIZES.padding : 0,
         ...cardItemContainerStyle,
-      }}
-    >
+      }}>
       <Image
         source={
           imageUrl
             ? { uri: imageUrl }
-            : require('../assets/images/image-placeholder.png')
+            : require("../assets/images/image-placeholder.png")
         }
         style={{
           height: 135,
@@ -78,28 +77,27 @@ const HorizontalCardItem = ({
       {/* main text  */}
       <Text
         style={{
-          position: 'relative',
+          position: "relative",
           paddingTop: 15,
           color: COLORS.white,
-          alignSelf: type === MEDIA.artist ? 'center' : 'flex-start',
+          alignSelf: type === MEDIA.artist ? "center" : "flex-start",
           ...FONTS.cardItemText,
           ...cardItemTextStyle,
-        }}
-      >
+        }}>
         {trimText(cardLabel?.toUpperCase() as string, 19)}
       </Text>
       {/* sub text  */}
-      {type === 'album' ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      {type === "album" ? (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={styles.date}>{date.substring(0, 4)}</Text>
           <BulletDot />
           <Text style={styles.albumType}>
-            {albumType === 'single' ? 'Single' : 'Album'}
+            {albumType === "single" ? "Single" : "Album"}
           </Text>
           <BulletDot />
           <Text style={{ color: COLORS.lightGray, ...FONTS.cardItemSubText }}>
-            {albumType === 'single' ? (
-              <Text>{trimText(artists[0].name, 8)}</Text>
+            {albumType === "single" ? (
+              <Text>{trimText(artists?.profile?.displayname, 8)}</Text>
             ) : (
               <Text>{trimText(albumName, 8)}</Text>
             )}
@@ -107,8 +105,8 @@ const HorizontalCardItem = ({
         </View>
       ) : null}
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   date: {
@@ -119,6 +117,6 @@ const styles = StyleSheet.create({
     color: COLORS.lightGray,
     ...FONTS.cardItemSubText,
   },
-})
+});
 
-export default HorizontalCardItem
+export default HorizontalCardItem;

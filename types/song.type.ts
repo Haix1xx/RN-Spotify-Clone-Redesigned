@@ -25,4 +25,5 @@ export interface Song {
   __v: number;
   id: string;
   artist: IUser;
+  user: string;
 }

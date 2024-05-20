@@ -69,13 +69,14 @@ export const getUserRecentlyPlayedAsync = createAsyncThunk<
 >("user/getRecentlyPlayed", async (limit, { getState }) => {
   const accessToken = getState().auth.accessToken;
   const response = await fetch(
-    `${BASE_URL}/me/player/recently-played?limit=${limit}`,
+    `${BASE_URL}/me/recently-played?limit=${limit}`,
     {
       method: "GET",
       headers: setHeaders(accessToken),
     },
   );
   const data = await response.json();
+  console.log("getRecentlyPlayed", JSON.stringify(data, null, 2));
   return data;
 });
 
@@ -117,31 +118,31 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
-  // extraReducers: (builder) => {
-  //   builder.addCase(getUserProfileAsync.fulfilled, (state, { payload }) => {
-  //     state.data = payload
-  //   })
-  //   builder.addCase(getUserPlaylistsAsync.fulfilled, (state, { payload }) => {
-  //     state.playlists = payload.items
-  //   })
-  //   builder.addCase(
-  //     getUserRecentlyPlayedAsync.fulfilled,
-  //     (state, { payload }) => {
-  //       const transformedItems = payload.items.map((item: any) => {
-  //         const trackName = item.track.name
-  //         const albumName = item.track.album.name
-  //         return { ...item.track.album, name: trackName, albumName }
-  //       })
-  //       state.recentlyPlayed = [...new Set(transformedItems)]
-  //     }
-  //   )
-  //   builder.addCase(getUserTopArtistsAsync.fulfilled, (state, { payload }) => {
-  //     state.topArtists = payload.items
-  //   })
-  //   builder.addCase(getUserFollowsAsync.fulfilled, (state, { payload }) => {
-  //     state.follows = payload.artists.items
-  //   })
-  // },
+  extraReducers: (builder) => {
+    //   builder.addCase(getUserProfileAsync.fulfilled, (state, { payload }) => {
+    //     state.data = payload
+    //   })
+    //   builder.addCase(getUserPlaylistsAsync.fulfilled, (state, { payload }) => {
+    //     state.playlists = payload.items
+    //   })
+    builder.addCase(
+      getUserRecentlyPlayedAsync.fulfilled,
+      (state, { payload }) => {
+        const transformedItems = payload.data.data.map((item: any) => {
+          const trackName = item.track.name;
+          const albumName = item.track.album.title;
+          return { ...item.track.album, name: trackName, albumName };
+        });
+        state.recentlyPlayed = [...new Set(transformedItems)];
+      },
+    );
+    //   builder.addCase(getUserTopArtistsAsync.fulfilled, (state, { payload }) => {
+    //     state.topArtists = payload.items
+    //   })
+    //   builder.addCase(getUserFollowsAsync.fulfilled, (state, { payload }) => {
+    //     state.follows = payload.artists.items
+    //   })
+  },
 });
 
 export default userSlice.reducer;

@@ -26,6 +26,7 @@ const SearchItem = ({
   type,
   avatar,
   displayname,
+  user,
 }: Partial<Song> & {
   searchTerm: string;
 }) => {
@@ -43,7 +44,7 @@ const SearchItem = ({
     if (type !== MEDIA.track) {
       navigation.navigate("Media", {
         mediaType: type,
-        mediaId: id,
+        mediaId: type === MEDIA?.artist ? user : id,
       });
     } else {
       const selectedTrack = {
@@ -56,6 +57,7 @@ const SearchItem = ({
       };
       dispatch(trackPlayerActions.resetPlayerAsync());
       dispatch(trackPlayerActions.setCurrentTrackAsync(selectedTrack));
+      dispatch(trackPlayerActions.countStream(id));
       dispatch(trackPlayerActions.playTrackAsync());
       dispatch(trackPlayerActions.setSearchTerm(searchTerm));
     }

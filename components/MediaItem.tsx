@@ -52,7 +52,7 @@ const MediaItem = ({
       id,
       url: url,
       title: name,
-      artist: artistsNames,
+      artist: artistsNames || "",
       artwork: imageUrl ? imageUrl : previewUrl,
       duration: duration,
     };
@@ -62,6 +62,7 @@ const MediaItem = ({
     }
     dispatch(trackPlayerActions.resetPlayerAsync());
     await dispatch(trackPlayerActions.setCurrentTrackAsync(selectedTrack));
+    await dispatch(trackPlayerActions.countStream(id));
     if (trackPlayer.isShuffle)
       dispatch(trackPlayerActions.shuffleTracksAsync());
     await dispatch(trackPlayerActions.playTrackAsync());

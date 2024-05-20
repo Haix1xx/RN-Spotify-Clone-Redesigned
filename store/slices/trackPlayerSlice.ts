@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import TrackPlayer from "react-native-track-player";
 
 import { RootState } from "../index";
-import { shuffle } from "../../utils/helpers";
+import { setHeaders, shuffle } from "../../utils/helpers";
+import { BASE_URL } from "@env";
 
 const initialState = {
   isTrackPlaying: false,
@@ -23,11 +24,36 @@ const initialState = {
 export const initAsync = createAsyncThunk("trackPlayer/init", async () => {
   await TrackPlayer.setupPlayer({});
 });
+export const countStream = createAsyncThunk<any, string, { state: RootState }>(
+  "stream/count",
+  async (id, { getState, rejectWithValue }) => {
+    const accessToken = getState().auth.accessToken;
+    console.log("id", JSON.stringify(id, null, 2));
+    console.log("accessToken", JSON.stringify(accessToken, null, 2));
 
+    try {
+      const response = await fetch(`${BASE_URL}/streams`, {
+        method: "POST",
+        headers: setHeaders(accessToken),
+        body: JSON.stringify({
+          track: id,
+        }),
+      });
+      let data = await response.json();
+      console.log("stream", JSON.stringify(data, null, 2));
+      return data;
+    } catch (error) {
+      console.log("streamerror", JSON.stringify(error, null, 2));
+
+      return rejectWithValue(error);
+    }
+  },
+);
 export const setCurrentTrackAsync = createAsyncThunk(
   "trackPlayer/setCurrentTrack",
-  async (currentTrack: typeof initialState.currentTrack) => {
+  async (currentTrack: typeof initialState.currentTrack, { dispatch }) => {
     await TrackPlayer.add(currentTrack);
+    dispatch(countStream(currentTrack.id));
     return currentTrack;
   },
 );
@@ -66,11 +92,15 @@ export const playNextTrackAsync = createAsyncThunk<
   { state: RootState }
 >("trackPlayer/playNextTrack", async (_, { dispatch, getState }) => {
   const trackPlayer = getState().trackPlayer;
+  console.log(
+    "trackPlayer.tracks",
+    JSON.stringify(trackPlayer.tracks, null, 2),
+  );
   const media = getState().media;
   const isAlbum = getState().media.type === "album";
   const lastIndex = trackPlayer.tracks.length - 1;
   const currentTrackIndex = trackPlayer.tracks.findIndex(
-    (track: any) => track.id === trackPlayer.currentTrack.id,
+    (track: any) => track._id === trackPlayer.currentTrack.id,
   );
   let nextTrack;
   if (currentTrackIndex === lastIndex) {
@@ -79,15 +109,18 @@ export const playNextTrackAsync = createAsyncThunk<
     nextTrack = trackPlayer.tracks[currentTrackIndex + 1];
   }
   dispatch(resetPlayerAsync());
+
   dispatch(
     setCurrentTrackAsync({
-      id: nextTrack.id,
-      url: nextTrack.preview_url,
-      title: nextTrack.name,
-      artist: nextTrack.artists.map((artist: any) => artist.name).join(", "),
-      artwork: isAlbum ? media.images[0].url : nextTrack.album.images[0].url,
+      id: nextTrack._id,
+      url: nextTrack.url,
+      title: nextTrack.title,
+      artist: nextTrack.artist?.displayname || " ",
+      artwork: nextTrack.coverPath,
+      duration: nextTrack.duration,
     }),
   );
+  dispatch(countStream(nextTrack.id));
   if (currentTrackIndex === lastIndex && !trackPlayer.repeat.all) {
     dispatch(pauseTrackAsync());
   } else {
@@ -104,7 +137,7 @@ export const playPrevTrackAsync = createAsyncThunk<
   const media = getState().media;
   const isAlbum = getState().media.type === "album";
   const currentTrackIndex = trackPlayer.tracks.findIndex(
-    (track: any) => track.id === trackPlayer.currentTrack.id,
+    (track: any) => track._id === trackPlayer.currentTrack.id,
   );
   let prevTrack;
   if (currentTrackIndex < 1) {
@@ -118,13 +151,16 @@ export const playPrevTrackAsync = createAsyncThunk<
     dispatch(resetPlayerAsync());
     dispatch(
       setCurrentTrackAsync({
-        id: prevTrack.id,
-        url: prevTrack.preview_url,
-        title: prevTrack.name,
-        artist: prevTrack.artists.map((artist: any) => artist.name).join(", "),
-        artwork: isAlbum ? media.images[0].url : prevTrack.album.images[0].url,
+        id: nextTrack._id,
+        url: nextTrack.url,
+        title: nextTrack.title,
+        artist: nextTrack.artist?.displayname || " ",
+        artwork: nextTrack.coverPath,
+        duration: nextTrack.duration,
       }),
     );
+    dispatch(countStream(prevTrack.id));
+
     dispatch(playTrackAsync());
   }
 });
@@ -136,10 +172,10 @@ export const shuffleTracksAsync = createAsyncThunk<
 >("trackPlayer/shuffleTracks", async (_, { getState }) => {
   const trackPlayer = getState().trackPlayer;
   const currentTrack = trackPlayer.tracks.find(
-    (track: any) => track.id === trackPlayer.currentTrack.id,
+    (track: any) => track._id === trackPlayer.currentTrack.id,
   );
   const filteredTracks = trackPlayer.tracks.filter(
-    (track: any) => track.id !== currentTrack.id,
+    (track: any) => track._id !== currentTrack.id,
   );
   const randomTracks = shuffle(filteredTracks);
   randomTracks.unshift(currentTrack);
@@ -151,7 +187,7 @@ export const unShuffleTracksAsync = createAsyncThunk<
   void,
   { state: RootState }
 >("trackPlayer/unShuffleTracks", (_, { getState }) => {
-  const originalTracks = getState().media.tracks.items;
+  const originalTracks = getState().media.tracks;
   return originalTracks;
 });
 
