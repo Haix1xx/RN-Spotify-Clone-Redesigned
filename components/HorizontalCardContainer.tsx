@@ -1,7 +1,7 @@
 import React from "react";
 import { View, FlatList } from "react-native";
 
-import { SIZES } from "../constants";
+import { MEDIA, SIZES } from "../constants";
 import TextTitle from "./TextTitle";
 import HorizontalCardItem from "./HorizontalCardItem";
 
@@ -48,13 +48,13 @@ const HorizontalCardContainer = ({
               id={item._id}
               cardItemTextStyle={cardItemTextStyle}
               cardItemImageStyle={cardItemImageStyle}
-              type={item.type}
-              imageUrl={item?.coverPath}
+              type={item.type || MEDIA.artist}
+              imageUrl={item?.coverPath || item?.profile?.avatar}
               index={index}
               cardLabel={item.title}
               date={item.releaseDate}
               albumName={item.albumName}
-              artists={item.artist}
+              artists={item.artist || item}
               albumType={item.album_type}
             />
           );

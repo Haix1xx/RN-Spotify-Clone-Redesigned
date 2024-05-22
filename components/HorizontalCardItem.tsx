@@ -41,7 +41,7 @@ const HorizontalCardItem = ({
   id,
 }: IHorizontalCardItem) => {
   const navigation = useNavigation<horizontalCardItemNavProps>();
-
+  console.log("id", JSON.stringify(id, null, 2));
   const onCardItemHandler = () => {
     navigation.navigate("Media", {
       mediaId: id,

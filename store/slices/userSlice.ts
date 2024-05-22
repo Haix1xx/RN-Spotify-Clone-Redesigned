@@ -76,7 +76,6 @@ export const getUserRecentlyPlayedAsync = createAsyncThunk<
     },
   );
   const data = await response.json();
-  console.log("getRecentlyPlayed", JSON.stringify(data, null, 2));
   return data;
 });
 
@@ -119,12 +118,12 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    //   builder.addCase(getUserProfileAsync.fulfilled, (state, { payload }) => {
-    //     state.data = payload
-    //   })
-    //   builder.addCase(getUserPlaylistsAsync.fulfilled, (state, { payload }) => {
-    //     state.playlists = payload.items
-    //   })
+    builder.addCase(getUserProfileAsync.fulfilled, (state, { payload }) => {
+      state.data = payload.data;
+    });
+    // builder.addCase(getUserPlaylistsAsync.fulfilled, (state, { payload }) => {
+    //   state.playlists = payload.items
+    // })
     builder.addCase(
       getUserRecentlyPlayedAsync.fulfilled,
       (state, { payload }) => {

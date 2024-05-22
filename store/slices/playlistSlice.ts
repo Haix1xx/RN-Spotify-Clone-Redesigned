@@ -51,7 +51,7 @@ export const getNewReleasesAsync = createAsyncThunk<
 >("playlist/getNewReleases", async (limit, { getState }) => {
   const accessToken = getState().auth.accessToken;
   const response = await fetch(
-    `${BASE_URL}/browse/new-releases?limit=${limit}`,
+    `${BASE_URL}/search/new-releases?limit=${limit}`,
     {
       method: "GET",
       headers: setHeaders(accessToken),
@@ -65,28 +65,35 @@ const playlistSlice = createSlice({
   name: "playlist",
   initialState,
   reducers: {},
-  // extraReducers: (builder) => {
-  //   builder.addCase(
-  //     getCategoryPlaylistAsync.fulfilled,
-  //     (state, { payload }) => {
-  //       // state.topLists = payload.playlists.items
-  //       state.topLists = [];
-  //     },
-  //   );
-  //   builder.addCase(
-  //     getFeaturedPlaylistsAsync.fulfilled,
-  //     (state, { payload }) => {
-  //       // state.featured = payload.playlists.items
-  //       state.featured = [];
-  //     },
-  //   );
-  //   builder.addCase(getNewReleasesAsync.fulfilled, (state, { payload }) => {
-  //     state.newReleases = payload.albums.items.map((item: any) => {
-  //       const albumName = item.name;
-  //       return { ...item, name: albumName, albumName };
-  //     });
-  //   });
-  // },
+  extraReducers: (builder) => {
+    //   builder.addCase(
+    //     getCategoryPlaylistAsync.fulfilled,
+    //     (state, { payload }) => {
+    //       // state.topLists = payload.playlists.items
+    //       state.topLists = [];
+    //     },
+    //   );
+    //   builder.addCase(
+    //     getFeaturedPlaylistsAsync.fulfilled,
+    //     (state, { payload }) => {
+    //       // state.featured = payload.playlists.items
+    //       state.featured = [];
+    //     },
+    //   );
+    builder.addCase(getNewReleasesAsync.fulfilled, (state, { payload }) => {
+      state.newReleases = [
+        ...(payload.data?.artists || []),
+        ...(payload.data?.albums || []),
+        ...(payload.data?.tracks || []),
+        ...(payload.data?.playlists || []),
+        // ...(payload.data?.playlists.items || []),
+      ];
+      // state.newReleases = payload.albums.items.map((item: any) => {
+      //   const albumName = item.name;
+      //   return { ...item, name: albumName, albumName };
+      // });
+    });
+  },
 });
 
 export default playlistSlice.reducer;

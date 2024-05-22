@@ -6,20 +6,7 @@ import { RootState } from "../index";
 
 const initialState = {
   topArtists: [] as any,
-  topTracks: [
-    {
-      preview_url: "",
-      id: "",
-      name: "",
-      album: {
-        name: "",
-        images: [{ url: "" }],
-      },
-      duration_ms: 0,
-      artists: [{ name: "" }],
-      images: [] as any,
-    },
-  ],
+  topTracks: [] as any,
   userTracks: [
     {
       preview_url: "",
@@ -43,13 +30,10 @@ export const getTopArtistsAsync = createAsyncThunk<
   { state: RootState }
 >("library/getTopArtists", async (_, { getState }) => {
   const accessToken = getState().auth.accessToken;
-  const response = await fetch(
-    `${BASE_URL}/me/top/artists?time_range=long_term&limit=10`,
-    {
-      method: "GET",
-      headers: setHeaders(accessToken),
-    },
-  );
+  const response = await fetch(`${BASE_URL}/me/top/artists?&limit=10`, {
+    method: "GET",
+    headers: setHeaders(accessToken),
+  });
   const data = await response.json();
   return data;
 });
@@ -60,13 +44,10 @@ export const getTopTracksAsync = createAsyncThunk<
   { state: RootState }
 >("library/getTopTracks", async (_, { getState }) => {
   const accessToken = getState().auth.accessToken;
-  const response = await fetch(
-    `${BASE_URL}/me/top/tracks?time_range=long_term&limit=10`,
-    {
-      method: "GET",
-      headers: setHeaders(accessToken),
-    },
-  );
+  const response = await fetch(`${BASE_URL}/me/top/tracks?limit=10`, {
+    method: "GET",
+    headers: setHeaders(accessToken),
+  });
   const data = await response.json();
   return data;
 });
@@ -103,36 +84,42 @@ const librarySlice = createSlice({
   name: "library",
   initialState,
   reducers: {},
-  // extraReducers: (builder) => {
-  //   builder.addCase(getTopArtistsAsync.fulfilled, (state, { payload }) => {
-  //     state.topArtists = payload.items
-  //   })
-  //   builder.addCase(getTopTracksAsync.fulfilled, (state, { payload }) => {
-  //     state.topTracks = payload.items.map((item: any) => {
-  //       const trackName = item.name
-  //       const albumName = item.album.name
-  //       const id = item.id
-  //       return { ...item.album, name: trackName, albumName, id }
-  //     })
-  //   })
-  //   builder.addCase(getUserTracksAsync.fulfilled, (state, { payload }) => {
-  //     state.userTracks = payload.items
-  //       .filter((track: any) => track.preview_url !== null)
-  //       .map((item: any) => {
-  //         const trackName = item.track.name
-  //         const albumName = item.track.album.name
-  //         const id = item.track.id
-  //         return { ...item.track, name: trackName, albumName, id }
-  //       })
-  //   })
-  //   builder.addCase(getUserAlbumsAsync.fulfilled, (state, { payload }) => {
-  //     state.userAlbums = payload.items.map((item: any) => {
-  //       const albumName = item.album.name
-  //       const id = item.album.id
-  //       return { ...item.album, albumName, id }
-  //     })
-  //   })
-  // },
+  extraReducers: (builder) => {
+    builder.addCase(getTopArtistsAsync.fulfilled, (state, { payload }) => {
+      state.topArtists = payload.data?.data;
+    });
+    builder.addCase(getTopTracksAsync.fulfilled, (state, { payload }) => {
+      const transformedItems = payload.data.data.map((item: any) => {
+        const trackName = item.track.title;
+        const albumName = item.track.album.title;
+        return { ...item.track, name: trackName, albumName };
+      });
+      state.topTracks = [...new Set(transformedItems)];
+      // state.topTracks = payload.items.map((item: any) => {
+      //   const trackName = item.name
+      //   const albumName = item.album.name
+      //   const id = item.id
+      //   return { ...item.album, name: trackName, albumName, id }
+      // })
+    });
+    //   builder.addCase(getUserTracksAsync.fulfilled, (state, { payload }) => {
+    //     state.userTracks = payload.items
+    //       .filter((track: any) => track.preview_url !== null)
+    //       .map((item: any) => {
+    //         const trackName = item.track.name
+    //         const albumName = item.track.album.name
+    //         const id = item.track.id
+    //         return { ...item.track, name: trackName, albumName, id }
+    //       })
+    //   })
+    //   builder.addCase(getUserAlbumsAsync.fulfilled, (state, { payload }) => {
+    //     state.userAlbums = payload.items.map((item: any) => {
+    //       const albumName = item.album.name
+    //       const id = item.album.id
+    //       return { ...item.album, albumName, id }
+    //     })
+    //   })
+  },
 });
 
 export default librarySlice.reducer;

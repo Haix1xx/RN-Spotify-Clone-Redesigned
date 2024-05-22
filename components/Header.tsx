@@ -10,7 +10,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // dispatch(userActions.getUserProfileAsync());
+    dispatch(userActions.getUserProfileAsync());
   }, [dispatch]);
 
   // console.log("user", JSON.stringify(user, null, 2));
@@ -32,8 +32,9 @@ const Header = () => {
           source={icons.spotifyLogoWhite}
         />
         <Text style={{ color: COLORS.white, ...FONTS.greeting }}>
-          {/* GOOD MORNING {user.data.display_name.split(" ")[0].toUpperCase()}! */}
-          Fix later
+          GOOD MORNING{" "}
+          {user.data?.profile?.lastname.split(" ")[0].toUpperCase()}!
+          {/* Fix later */}
         </Text>
       </View>
     </View>

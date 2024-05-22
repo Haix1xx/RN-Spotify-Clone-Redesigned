@@ -28,8 +28,6 @@ export const countStream = createAsyncThunk<any, string, { state: RootState }>(
   "stream/count",
   async (id, { getState, rejectWithValue }) => {
     const accessToken = getState().auth.accessToken;
-    console.log("id", JSON.stringify(id, null, 2));
-    console.log("accessToken", JSON.stringify(accessToken, null, 2));
 
     try {
       const response = await fetch(`${BASE_URL}/streams`, {
@@ -40,11 +38,8 @@ export const countStream = createAsyncThunk<any, string, { state: RootState }>(
         }),
       });
       let data = await response.json();
-      console.log("stream", JSON.stringify(data, null, 2));
       return data;
     } catch (error) {
-      console.log("streamerror", JSON.stringify(error, null, 2));
-
       return rejectWithValue(error);
     }
   },
@@ -92,10 +87,7 @@ export const playNextTrackAsync = createAsyncThunk<
   { state: RootState }
 >("trackPlayer/playNextTrack", async (_, { dispatch, getState }) => {
   const trackPlayer = getState().trackPlayer;
-  console.log(
-    "trackPlayer.tracks",
-    JSON.stringify(trackPlayer.tracks, null, 2),
-  );
+
   const media = getState().media;
   const isAlbum = getState().media.type === "album";
   const lastIndex = trackPlayer.tracks.length - 1;
