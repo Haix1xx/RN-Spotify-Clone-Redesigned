@@ -56,6 +56,8 @@ const HorizontalCardContainer = ({
               albumName={item.albumName}
               artists={item.artist || item}
               albumType={item.album_type}
+              url={item?.url}
+              duration={item?.duration}
             />
           );
         }}

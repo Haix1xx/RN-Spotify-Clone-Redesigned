@@ -8,6 +8,8 @@ import BulletDot from "./BulletDot";
 import { RootStackParamList } from "../screens/RootStackParams";
 import { COLORS, FONTS, SIZES, MEDIA } from "../constants";
 import { trimText } from "../utils/helpers";
+import * as trackPlayerActions from "../store/slices/trackPlayerSlice";
+import { useAppDispatch } from "../hooks/redux-hooks";
 
 type horizontalCardItemNavProps = StackNavigationProp<RootStackParamList>;
 
@@ -39,14 +41,37 @@ const HorizontalCardItem = ({
   albumType,
   artists,
   id,
-}: IHorizontalCardItem) => {
+  url,
+  duration,
+}: any) => {
   const navigation = useNavigation<horizontalCardItemNavProps>();
-  console.log("id", JSON.stringify(id, null, 2));
+  const dispatch = useAppDispatch();
+  // const onCardItemHandler = () => {
+  //   navigation.navigate("Media", {
+  //     mediaId: id,
+  //     mediaType: type,
+  //   });
+  // };
   const onCardItemHandler = () => {
-    navigation.navigate("Media", {
-      mediaId: id,
-      mediaType: type,
-    });
+    if (type !== MEDIA.track) {
+      navigation.navigate("Media", {
+        mediaType: type,
+        mediaId: id,
+      });
+    } else {
+      const selectedTrack = {
+        id,
+        url: url,
+        title: cardLabel,
+        artist: artists?.profile?.displayname || "",
+        artwork: imageUrl,
+        duration: duration,
+      };
+      dispatch(trackPlayerActions.resetPlayerAsync());
+      dispatch(trackPlayerActions.setCurrentTrackAsync(selectedTrack));
+      dispatch(trackPlayerActions.countStream(id));
+      dispatch(trackPlayerActions.playTrackAsync());
+    }
   };
 
   return (

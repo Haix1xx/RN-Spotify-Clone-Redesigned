@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -6,45 +6,45 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-} from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+} from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 import {
   Header,
   HorizontalCardContainer,
   TextButton,
   TextTitle,
-} from '../components'
-import { SIZES, COLORS, FONTS } from '../constants'
-import { useAppDispatch, useAppSelector } from '../hooks/redux-hooks'
-import * as userActions from '../store/slices/userSlice'
-import * as playlistActions from '../store/slices/playlistSlice'
-import * as trackPlayerActions from '../store/slices/trackPlayerSlice'
+} from "../components";
+import { SIZES, COLORS, FONTS } from "../constants";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import * as userActions from "../store/slices/userSlice";
+import * as playlistActions from "../store/slices/playlistSlice";
+import * as trackPlayerActions from "../store/slices/trackPlayerSlice";
 
 const Home = () => {
-  const user = useAppSelector((state) => state.user)
-  const playlist = useAppSelector((state) => state.playlist)
-  const dispatch = useAppDispatch()
+  const user = useAppSelector((state) => state.user);
+  const playlist = useAppSelector((state) => state.playlist);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(userActions.getUserPlaylistsAsync('15'))
-    dispatch(userActions.getUserRecentlyPlayedAsync('10'))
+    dispatch(userActions.getUserPlaylistsAsync("15"));
+    dispatch(userActions.getUserRecentlyPlayedAsync("10"));
     dispatch(
       userActions.getUserTopArtistsAsync({
-        time_range: 'long_term',
-        limit: '3',
-      })
-    )
+        time_range: "long_term",
+        limit: "3",
+      }),
+    );
     dispatch(
       playlistActions.getCategoryPlaylistAsync({
-        categoryId: 'toplists',
-        limit: '10',
-      })
-    )
-    dispatch(playlistActions.getFeaturedPlaylistsAsync('1'))
-    dispatch(playlistActions.getNewReleasesAsync('10'))
-    dispatch(trackPlayerActions.initAsync())
-  }, [dispatch])
+        categoryId: "toplists",
+        limit: "10",
+      }),
+    );
+    dispatch(playlistActions.getFeaturedPlaylistsAsync("1"));
+    dispatch(playlistActions.getNewReleasesAsync("10"));
+    dispatch(trackPlayerActions.initAsync());
+  }, [dispatch]);
 
   const renderButtons = () => {
     return (
@@ -58,16 +58,15 @@ const Home = () => {
           buttonContainerStyle={styles.textButton}
         />
       </View>
-    )
-  }
+    );
+  };
 
   const renderTopArtistsAndTracksContainer = () => {
-    const topArtists = [...user.topArtists]
+    const topArtists = [...user.topArtists];
     return (
       <TouchableOpacity
         activeOpacity={0.7}
-        style={{ paddingBottom: SIZES.paddingBottom }}
-      >
+        style={{ paddingBottom: SIZES.paddingBottom }}>
         <TextTitle label='TOP ARTIST AND TRACKS' />
         <View style={styles.artistsAndTracksContainer}>
           <View style={styles.textContainer}>
@@ -89,17 +88,20 @@ const Home = () => {
                         ? {
                             uri: artist.images[0].url,
                           }
-                        : require('../assets/images/image-placeholder.png')
+                        : require("../assets/images/image-placeholder.png")
                     }
                   />
                 </View>
-              )
+              );
             })}
         </View>
       </TouchableOpacity>
-    )
-  }
-
+    );
+  };
+  console.log(
+    "playlist.newReleases",
+    JSON.stringify(playlist.newReleases, null, 2),
+  );
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -130,9 +132,8 @@ const Home = () => {
                     ? {
                         uri: playlist.featured[0].images[0].url,
                       }
-                    : require('../assets/images/image-placeholder.png')
-                }
-              >
+                    : require("../assets/images/image-placeholder.png")
+                }>
                 <TextButton
                   label='CHECK IT OUT'
                   buttonContainerStyle={{
@@ -150,25 +151,25 @@ const Home = () => {
         </View>
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: SIZES.paddingTop,
     backgroundColor: COLORS.black,
-    width: '100%',
+    width: "100%",
   },
   playlistTextStyle: {
     paddingLeft: 10,
-    position: 'absolute',
+    position: "absolute",
     bottom: SIZES.padding,
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: SIZES.padding,
     paddingBottom: SIZES.paddingBottom,
   },
@@ -184,9 +185,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray3,
     padding: 10,
     borderRadius: 20,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    flexDirection: 'row-reverse',
+    justifyContent: "flex-end",
+    alignItems: "center",
+    flexDirection: "row-reverse",
   },
   topArtistsAndTracksText: {
     color: COLORS.white,
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
   textContainer: {
     paddingLeft: 45,
     paddingRight: 80,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   topArtistAndTracksImage: {
     height: 135,
@@ -204,16 +205,16 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   featuredContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   featuredImage: {
-    width: '100%',
+    width: "100%",
     height: 210,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-})
+});
 
-export default Home
+export default Home;

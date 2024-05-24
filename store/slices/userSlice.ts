@@ -130,7 +130,7 @@ const userSlice = createSlice({
         const transformedItems = payload.data.data.map((item: any) => {
           const trackName = item.track.name;
           const albumName = item.track.album.title;
-          return { ...item.track.album, name: trackName, albumName };
+          return { ...item.track, name: trackName, albumName };
         });
         state.recentlyPlayed = [...new Set(transformedItems)];
       },
