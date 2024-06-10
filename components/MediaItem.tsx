@@ -56,7 +56,6 @@ const MediaItem = ({
       artwork: imageUrl ? imageUrl : previewUrl,
       duration: duration,
     };
-    console.log("selectedTrack", JSON.stringify(selectedTrack, null, 2));
     if (trackPlayer.searchTerm.length > 0) {
       dispatch(trackPlayerActions.setSearchTerm(""));
     }

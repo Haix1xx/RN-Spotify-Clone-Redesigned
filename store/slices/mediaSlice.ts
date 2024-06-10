@@ -69,7 +69,6 @@ export const getArtistTracksAsync = createAsyncThunk<
       headers: setHeaders(accessToken),
     });
     const data = await response.json();
-    console.log("artistInfo", JSON.stringify(artistInfo, null, 2));
     return { ...data, artist: artistInfo?.data?.data };
   } catch (error) {
     return rejectWithValue(error);

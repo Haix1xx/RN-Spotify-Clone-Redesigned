@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import TrackPlayer from "react-native-track-player";
-
+import RNFetchBlob from "rn-fetch-blob";
 import { RootState } from "../index";
 import { setHeaders, shuffle } from "../../utils/helpers";
 import { BASE_URL } from "@env";
+import { ToastAndroid } from "react-native";
+import { navigate } from "../../navigation";
 
 const initialState = {
   isTrackPlaying: false,
@@ -38,6 +40,73 @@ export const countStream = createAsyncThunk<any, string, { state: RootState }>(
         }),
       });
       let data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+export const getTrack = createAsyncThunk<any, string, { state: RootState }>(
+  "track/id",
+  async (id, { getState, rejectWithValue, dispatch }) => {
+    const accessToken = getState().auth.accessToken;
+    try {
+      const response = await fetch(`${BASE_URL}/tracks/${id}`, {
+        method: "GET",
+        headers: setHeaders(accessToken),
+      });
+      let data = await response.json();
+      const song = data?.data?.data;
+      const selectedTrack = {
+        id,
+        url: song?.url,
+        title: song?.title,
+        artist: song?.artist?.profile?.displayname || "",
+        artwork: song?.coverPath,
+        duration: song?.duration,
+      };
+      dispatch(resetPlayerAsync());
+      dispatch(setCurrentTrackAsync(selectedTrack));
+      dispatch(countStream(id));
+      dispatch(playTrackAsync());
+      navigate("TrackPlayer");
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+export const predictShazam = createAsyncThunk<any, any, { state: RootState }>(
+  "predict/shazam",
+  async (song, { getState, rejectWithValue, dispatch }) => {
+    const accessToken = getState().auth.accessToken;
+    const formData = new FormData();
+    formData.append("audio", {
+      uri: song,
+      name: "output.aac",
+      type: "audio/aac",
+    });
+    try {
+      const response = await fetch(
+        `https://allowing-square-werewolf.ngrok-free.app/api/v1/tracks/predict`,
+        {
+          method: "POST",
+          headers: setHeaders(accessToken, "multipart/form-data"),
+          body: formData,
+        },
+      );
+      let data = await response.json();
+      if (!data?.data) {
+        ToastAndroid.showWithGravity(
+          "Not found song! ",
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
+      } else {
+        dispatch(getTrack(data?.data?.trackId));
+      }
+
       return data;
     } catch (error) {
       return rejectWithValue(error);

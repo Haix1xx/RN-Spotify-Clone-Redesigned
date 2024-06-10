@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import * as browseActions from "../store/slices/browseSlice";
 import * as searchActions from "../store/slices/searchSlice";
 import { useDebounce } from "../hooks/useDebounce";
+import { useNavigation } from "@react-navigation/native";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +24,7 @@ const Search = () => {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const search = useAppSelector((state) => state.search);
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
 
   useEffect(() => {
     dispatch(browseActions.getBrowseCategories());
@@ -153,7 +155,12 @@ const Search = () => {
               placeholderTextColor={COLORS.white}
               style={styles.textInput}
             />
-            <Image source={icons.search} style={styles.searchIcon} />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Recorder");
+              }}>
+              <Image source={icons.audio} style={styles.searchIcon} />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.footerContainer}>

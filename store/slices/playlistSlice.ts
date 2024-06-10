@@ -33,13 +33,10 @@ export const getFeaturedPlaylistsAsync = createAsyncThunk<
   { state: RootState }
 >("playlist/getFeaturedPlaylist", async (limit, { getState }) => {
   const accessToken = getState().auth.accessToken;
-  const response = await fetch(
-    `${BASE_URL}/browse/featured-playlists?limit=${limit}&country=US`,
-    {
-      method: "GET",
-      headers: setHeaders(accessToken),
-    },
-  );
+  const response = await fetch(`${BASE_URL}/f-playlists`, {
+    method: "GET",
+    headers: setHeaders(accessToken),
+  });
   const data = await response.json();
   return data;
 });
@@ -73,13 +70,12 @@ const playlistSlice = createSlice({
     //       state.topLists = [];
     //     },
     //   );
-    //   builder.addCase(
-    //     getFeaturedPlaylistsAsync.fulfilled,
-    //     (state, { payload }) => {
-    //       // state.featured = payload.playlists.items
-    //       state.featured = [];
-    //     },
-    //   );
+    builder.addCase(
+      getFeaturedPlaylistsAsync.fulfilled,
+      (state, { payload }) => {
+        state.featured = payload.data?.data || [];
+      },
+    );
     builder.addCase(getNewReleasesAsync.fulfilled, (state, { payload }) => {
       state.newReleases = [
         ...(payload.data?.artists || []),

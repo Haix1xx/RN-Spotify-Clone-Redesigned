@@ -91,7 +91,6 @@ export const loginAsync = createAsyncThunk(
       });
 
       const data = await response.json();
-      console.log("data", JSON.stringify(data, null, 2));
       dispatch(setTokens({ accessToken: data.token }));
       // AsyncStorage.setItem('authData', data.token);
       AsyncStorage.setItem(

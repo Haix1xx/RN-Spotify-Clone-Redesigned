@@ -1,6 +1,6 @@
-export const setHeaders = (accessToken: string) => ({
-  "Content-Type": "application/json",
-  Accept: "application/json",
+export const setHeaders = (accessToken: string, contentType?: string) => ({
+  "Content-Type": contentType || "application/json",
+  Accept: contentType || "application/json",
   Authorization: `Bearer ${accessToken}`,
 });
 

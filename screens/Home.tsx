@@ -8,6 +8,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as mediaActions from "../store/slices/mediaSlice";
 
 import {
   Header,
@@ -15,17 +16,20 @@ import {
   TextButton,
   TextTitle,
 } from "../components";
-import { SIZES, COLORS, FONTS } from "../constants";
+import { SIZES, COLORS, FONTS, MEDIA } from "../constants";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import * as userActions from "../store/slices/userSlice";
 import * as playlistActions from "../store/slices/playlistSlice";
 import * as trackPlayerActions from "../store/slices/trackPlayerSlice";
+import { navigate } from "../navigation";
 
 const Home = () => {
   const user = useAppSelector((state) => state.user);
   const playlist = useAppSelector((state) => state.playlist);
   const dispatch = useAppDispatch();
-
+  const library = useAppSelector((state) => state.library);
+  const { topArtists } = library;
+  console.log("topTracks", JSON.stringify(topArtists, null, 2));
   useEffect(() => {
     dispatch(userActions.getUserPlaylistsAsync("15"));
     dispatch(userActions.getUserRecentlyPlayedAsync("10"));
@@ -62,7 +66,6 @@ const Home = () => {
   };
 
   const renderTopArtistsAndTracksContainer = () => {
-    const topArtists = [...user.topArtists];
     return (
       <TouchableOpacity
         activeOpacity={0.7}
@@ -78,29 +81,31 @@ const Home = () => {
             </Text>
           </View>
           {topArtists &&
-            topArtists.reverse().map((artist) => {
-              return (
-                <View key={`${artist.id}`} style={{ width: 30 }}>
-                  <Image
-                    style={styles.topArtistAndTracksImage}
-                    source={
-                      artist.images[0].url
-                        ? {
-                            uri: artist.images[0].url,
-                          }
-                        : require("../assets/images/image-placeholder.png")
-                    }
-                  />
-                </View>
-              );
-            })}
+            topArtists
+              .filter((_, index) => index <= 2)
+              .map((artist) => {
+                return (
+                  <View key={`${artist.id}`} style={{ width: 30 }}>
+                    <Image
+                      style={styles.topArtistAndTracksImage}
+                      source={
+                        artist.profile?.avatar
+                          ? {
+                              uri: artist.profile?.avatar,
+                            }
+                          : require("../assets/images/image-placeholder.png")
+                      }
+                    />
+                  </View>
+                );
+              })}
         </View>
       </TouchableOpacity>
     );
   };
   console.log(
-    "playlist.newReleases",
-    JSON.stringify(playlist.newReleases, null, 2),
+    "playlist.featured[0]",
+    JSON.stringify(playlist.featured[0], null, 2),
   );
   return (
     <View style={styles.container}>
@@ -119,7 +124,6 @@ const Home = () => {
             data={user.recentlyPlayed}
           />
           {renderTopArtistsAndTracksContainer()}
-          <HorizontalCardContainer label='POPULAR' data={playlist.topLists} />
           {/* featured */}
           <View style={{ paddingBottom: SIZES.paddingBottom }}>
             <TextTitle label='FEATURED' />
@@ -128,13 +132,19 @@ const Home = () => {
                 style={styles.featuredImage}
                 resizeMode='repeat'
                 source={
-                  playlist.featured[0].images[0].url
+                  playlist.featured[0]?.coverPath
                     ? {
-                        uri: playlist.featured[0].images[0].url,
+                        uri: playlist.featured[0]?.coverPath,
                       }
                     : require("../assets/images/image-placeholder.png")
                 }>
                 <TextButton
+                  onPress={() => {
+                    navigate("Media", {
+                      mediaId: playlist.featured[0]?.id,
+                      mediaType: MEDIA.playlist,
+                    });
+                  }}
                   label='CHECK IT OUT'
                   buttonContainerStyle={{
                     backgroundColor: COLORS.black,
