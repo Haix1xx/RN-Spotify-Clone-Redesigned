@@ -1500,6 +1500,11 @@
   resolved "https://registry.npmjs.org/@types/q/-/q-1.5.5.tgz"
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
 
+"@types/react-native-audio@^4.3.8":
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/@types/react-native-audio/-/react-native-audio-4.3.8.tgz#6128aeca20b502f992b40fc76a257654c75435e0"
+  integrity sha512-meSUxQ6gusU2H7mGyPRybBVTZNRv+k2dBb+BGrZMnC+a+jNU4oVMW/v+MxUkCofxJ7pdoSFgDsUaNRHVNm2jjg==
+
 "@types/react-native-dotenv@^0.2.0":
   version "0.2.0"
   resolved "https://registry.npmjs.org/@types/react-native-dotenv/-/react-native-dotenv-0.2.0.tgz"
@@ -1513,10 +1518,25 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
+"@types/react-native-vector-icons@^6.4.18":
+  version "6.4.18"
+  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.18.tgz#18671c617b9d0958747bc959903470dde91a8c79"
+  integrity sha512-YGlNWb+k5laTBHd7+uZowB9DpIK3SXUneZqAiKQaj1jnJCZM0x71GDim5JCTMi4IFkhc9m8H/Gm28T5BjyivUw==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "^0.70"
+
 "@types/react-native@*", "@types/react-native@^0.66.8":
   version "0.66.8"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.66.8.tgz"
   integrity sha512-xiW7MfTPzd6xsJB8VEtheF9RH1Vyr1FlbM5jguMa+3ZtnFlE38H4TZSCFAaA3YGIZDnAOlG7qT13RUWyFpW2uw==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-native@^0.70":
+  version "0.70.19"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.70.19.tgz#b4e651dcf7f49c69ff3a4c3072584cad93155582"
+  integrity sha512-c6WbyCgWTBgKKMESj/8b4w+zWcZSsCforson7UdXtXMecG3MxCinYi6ihhrHVPyUrVzORsvEzK8zg32z4pK6Sg==
   dependencies:
     "@types/react" "*"
 
@@ -2050,6 +2070,11 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+
+base-64@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
+  integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
 
 base64-js@^1.1.2, base64-js@^1.5.1:
   version "1.5.1"
@@ -3502,6 +3527,18 @@ glob-parent@^5.0.0:
   dependencies:
     is-glob "^4.0.1"
 
+glob@7.0.6:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.0.6.tgz#211bafaf49e525b8cd93260d14ab136152b3f57a"
+  integrity sha512-f8c0rE8JiCxpa52kWPAOa3ZaYEnzofDzCQLCn3Vdk0Z5OVLq3BsRFJI4S4ykpeVW6QMGBUkMeUpoEgWnMTnw5Q==
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.0.2"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6:
   version "7.2.0"
   resolved "https://registry.npmjs.org/glob/-/glob-7.2.0.tgz"
@@ -4737,55 +4774,10 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash._reinterpolate@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz"
-  integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
-
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
-
-lodash.frompairs@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.npmjs.org/lodash.frompairs/-/lodash.frompairs-4.0.1.tgz"
-  integrity sha1-vE5SB/onV8E25XNhTpZkUGsrG9I=
-
-lodash.isequal@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.npmjs.org/lodash.isequal/-/lodash.isequal-4.5.0.tgz"
-  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
-
-lodash.isstring@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.npmjs.org/lodash.isstring/-/lodash.isstring-4.0.1.tgz"
-  integrity sha1-1SfftUVuynzJu5XV2ur4i6VKVFE=
-
-lodash.omit@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.npmjs.org/lodash.omit/-/lodash.omit-4.5.0.tgz"
-  integrity sha1-brGa5aHuHdnfC5aeZs4Lf6MLXmA=
-
-lodash.pick@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.npmjs.org/lodash.pick/-/lodash.pick-4.4.0.tgz"
-  integrity sha1-UvBWEP/53tQiYRRB7R/BI6AwAbM=
-
-lodash.template@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.npmjs.org/lodash.template/-/lodash.template-4.5.0.tgz"
-  integrity sha512-84vYFxIkmidUiFxidA/KjjH9pAycqW+h980j7Fuz5qxRtO9pgB7MDFTdys1N7A5mcucRiDyEq4fusljItR1T/A==
-  dependencies:
-    lodash._reinterpolate "^3.0.0"
-    lodash.templatesettings "^4.0.0"
-
-lodash.templatesettings@^4.0.0:
-  version "4.2.0"
-  resolved "https://registry.npmjs.org/lodash.templatesettings/-/lodash.templatesettings-4.2.0.tgz"
-  integrity sha512-stgLz+i3Aa9mZgnjr/O+v9ruKZsPsndy7qPZOchbqk2cnTU1ZaldKK+v7m54WoKIyxiuMZTKT2H81F8BeAc3ZQ==
-  dependencies:
-    lodash._reinterpolate "^3.0.0"
 
 lodash.throttle@^4.1.1:
   version "4.1.1"
@@ -5930,6 +5922,11 @@ react-native-app-auth@^6.4.0:
     invariant "2.2.4"
     react-native-base64 "0.0.2"
 
+react-native-audio@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-audio/-/react-native-audio-4.3.0.tgz#fae22b81f6a4dda706fd4837d0c6a89c66cf2e7e"
+  integrity sha512-QQYq28eSJy+y/Ukvry0AkbwMVELAj+LcEwCVRH+7sKLqlnoBBxGd4ilhgJHjwOiC70192LueGbjXJjPPEwW3iA==
+
 react-native-base64@0.0.2:
   version "0.0.2"
   resolved "https://registry.npmjs.org/react-native-base64/-/react-native-base64-0.0.2.tgz"
@@ -5943,6 +5940,13 @@ react-native-codegen@^0.0.7:
     flow-parser "^0.121.0"
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
+
+react-native-document-picker@8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-8.1.2.tgz#503cce26086020c833f08a405fe2da28f735ed08"
+  integrity sha512-R126YsjTXBuvigRRExyAQ+yn1UGV4dGcMI9x4UAY8TBTSOt6nOQcWS/AQcbzjk9MnN8ISDGqNq9GmN51Q1aHjA==
+  dependencies:
+    invariant "^2.2.4"
 
 react-native-dotenv@^3.2.0:
   version "3.2.0"
@@ -6013,6 +6017,11 @@ react-native-screens@^3.8.0:
   dependencies:
     warn-once "^0.1.0"
 
+react-native-sound@^0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.2.tgz#e542dc5b9e16ab4b3ac7e6eaddb1fc8d98da9038"
+  integrity sha512-LmGc8lgOK3qecYMVQpyHvww/C+wgT6sWeMpVbOe4NCRGC2yKd4fo4U0KBUo9PO7AqKESO3I/2GZg1/C0+bwiiA==
+
 react-native-splash-screen@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.2.0.tgz"
@@ -6041,17 +6050,11 @@ react-native-track-player@^2.1.2:
   resolved "https://registry.npmjs.org/react-native-track-player/-/react-native-track-player-2.1.2.tgz"
   integrity sha512-tZw9/4Ft7EtKtWDZuregBEXjXv++7WT7BvaXDk+lKCL/e3FQI5zyiwECfM18sk6raeMs7ItBxNsDKryCf9mMUA==
 
-react-native-vector-icons@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-9.0.0.tgz"
-  integrity sha512-qKX5d5/TafHmI4B7UOSZCL3BAGh7ZfF30iLwRgxBkKfZl2lKSuHp8Ottj9OyWh9b5fFtlg+LtyvZrns3g2kh+w==
+react-native-vector-icons@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-10.1.0.tgz#c98a225213700177d23492e32d1dc920b9bae8aa"
+  integrity sha512-fdQjCHIdoXmRoTZ5gvN1FmT4sGLQ2wmQiNZHKJQUYnE2tkIwjGnxNch+6Nd4lHAACvMWO7LOzBNot2u/zlOmkw==
   dependencies:
-    lodash.frompairs "^4.0.1"
-    lodash.isequal "^4.5.0"
-    lodash.isstring "^4.0.1"
-    lodash.omit "^4.5.0"
-    lodash.pick "^4.4.0"
-    lodash.template "^4.5.0"
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
@@ -6374,6 +6377,14 @@ rimraf@~2.2.6:
   version "2.2.8"
   resolved "https://registry.npmjs.org/rimraf/-/rimraf-2.2.8.tgz"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
+
+rn-fetch-blob@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/rn-fetch-blob/-/rn-fetch-blob-0.12.0.tgz#ec610d2f9b3f1065556b58ab9c106eeb256f3cba"
+  integrity sha512-+QnR7AsJ14zqpVVUbzbtAjq0iI8c9tCg49tIoKO2ezjzRunN7YL6zFSFSWZm6d+mE/l9r+OeDM3jmb2tBb2WbA==
+  dependencies:
+    base-64 "0.1.0"
+    glob "7.0.6"
 
 rsvp@^4.8.4:
   version "4.8.5"

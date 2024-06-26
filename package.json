@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=8081'"
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=8081'",
+    "build:apk": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd .. && open ./android/app/build/outputs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.9",
@@ -28,6 +29,7 @@
     "react-native": "^0.66.5",
     "react-native-app-auth": "^6.4.0",
     "react-native-audio": "^4.3.0",
+    "react-native-document-picker": "8.1.2",
     "react-native-dotenv": "^3.2.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-htmlview": "^0.16.0",

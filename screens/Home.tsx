@@ -69,6 +69,9 @@ const Home = () => {
     return (
       <TouchableOpacity
         activeOpacity={0.7}
+        onPress={() => {
+          navigate("TopTrack");
+        }}
         style={{ paddingBottom: SIZES.paddingBottom }}>
         <TextTitle label='TOP ARTIST AND TRACKS' />
         <View style={styles.artistsAndTracksContainer}>
@@ -140,10 +143,7 @@ const Home = () => {
                 }>
                 <TextButton
                   onPress={() => {
-                    navigate("Media", {
-                      mediaId: playlist.featured[0]?.id,
-                      mediaType: MEDIA.playlist,
-                    });
+                    navigate("TopTrack");
                   }}
                   label='CHECK IT OUT'
                   buttonContainerStyle={{

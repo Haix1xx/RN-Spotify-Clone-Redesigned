@@ -60,7 +60,11 @@ const Library = () => {
                 artists={item.artist}
                 durationMs={item.duration_ms}
                 duration={item.duration}
-                albumImages={[]}
+                albumImages={[
+                  {
+                    url: item.coverPath,
+                  },
+                ]}
                 url={item?.url}
               />
             );

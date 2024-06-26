@@ -7,10 +7,14 @@ import { RootState } from "../index";
 
 const initialState: {
   isLoading: boolean;
+  isLoading2: boolean;
+  results2: Song[];
   results: Song[];
 } = {
   isLoading: true,
   results: [],
+  isLoading2: true,
+  results2: [],
 };
 
 export const searchItemsAsync = createAsyncThunk<
@@ -27,6 +31,26 @@ export const searchItemsAsync = createAsyncThunk<
     });
     let data = await response.json();
 
+    return data;
+  } catch (error) {
+    return rejectWithValue(error);
+  }
+});
+export const topTrackAsync = createAsyncThunk<
+  any,
+  string,
+  { state: RootState }
+>("searchadada", async (any, { getState, rejectWithValue }) => {
+  const accessToken = getState().auth.accessToken;
+  try {
+    const response = await fetch(
+      `${BASE_URL}/overview/top-tracks?limit=10&page=1`,
+      {
+        method: "GET",
+        headers: setHeaders(accessToken),
+      },
+    );
+    let data = await response.json();
     return data;
   } catch (error) {
     return rejectWithValue(error);
@@ -50,6 +74,13 @@ const searchSlice = createSlice({
         ...(payload.data?.playlists || []),
         // ...(payload.data?.playlists.items || []),
       ];
+    });
+    builder.addCase(topTrackAsync.pending, (state) => {
+      state.isLoading2 = true;
+    });
+    builder.addCase(topTrackAsync.fulfilled, (state, { payload }) => {
+      state.isLoading2 = false;
+      state.results2 = payload?.data?.data;
     });
   },
 });

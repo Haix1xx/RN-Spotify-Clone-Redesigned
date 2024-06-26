@@ -8,6 +8,7 @@ import { RootStackParamList } from "../screens/RootStackParams";
 import { Profile, Media, Home, Search, Library } from "../screens";
 import { TabBarIcon, AudioPlayer } from "../components";
 import { COLORS } from "../constants";
+import ListTrack from "../screens/ListTrack";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -35,6 +36,7 @@ const HomeStack = () => {
     <Stack.Navigator screenOptions={() => ({ headerShown: false })}>
       <Stack.Screen name='Home' component={Home} />
       <Stack.Screen name='Media' component={Media} />
+      <Stack.Screen name='TopTrack' component={ListTrack} />
     </Stack.Navigator>
   );
 };

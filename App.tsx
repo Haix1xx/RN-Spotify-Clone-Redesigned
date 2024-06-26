@@ -22,6 +22,7 @@ import LoginScreen from "./screens/LoginScreen";
 import AudioExample from "./screens/Recorder";
 import Shazam from "./screens/Shazam";
 import { navigation } from "./navigation";
+import ListTrack from "./screens/ListTrack";
 
 const Stack = createStackNavigator<RootStackParamList>();
 

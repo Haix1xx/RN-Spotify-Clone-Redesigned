@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
   Animated,
+  Dimensions,
   ImageBackground,
+  PermissionsAndroid,
   Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import DocumentPicker, { types } from "react-native-document-picker";
+import { AudioRecorder, AudioUtils } from "react-native-audio";
 import LinearGradient from "react-native-linear-gradient";
 import FontistoIcons from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import IonIcons from "react-native-vector-icons/SimpleLineIcons";
-import { AudioRecorder, AudioUtils } from "react-native-audio";
-import RNFetchBlob from "rn-fetch-blob";
-import { Styles } from "./Styles";
 import { connect, useDispatch } from "react-redux";
 import { icons } from "../constants";
-import { predictShazam } from "../store/slices/trackPlayerSlice";
+import { getPath, predictShazam } from "../store/slices/trackPlayerSlice";
+import { Styles } from "./Styles";
 
 const {
   container,
@@ -77,6 +77,11 @@ const press_in_animation = Animated.loop(
 const Home = ({ navigation }) => {
   const dispatch = useDispatch();
   useEffect(() => {
+    PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    ]);
     pusle_animation.start();
   }, []);
   useEffect(() => {
@@ -134,6 +139,29 @@ const Home = ({ navigation }) => {
       console.error(error);
     }
   };
+  const handleDocumentSelection = useCallback(async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    );
+
+    try {
+      const response = await DocumentPicker.pickSingle({
+        presentationStyle: "fullScreen",
+        type: [types.audio],
+      });
+
+      const theSong = await getPath(response.uri);
+      console.log("theSong", JSON.stringify(response, null, 2));
+      dispatch(
+        predictShazam({
+          ...response,
+          uri: theSong,
+        }),
+      );
+    } catch (err) {
+      console.warn(err);
+    }
+  }, []);
   const [state, setState] = useState({
     currentTime: 0.0,
     recording: false,
@@ -229,16 +257,23 @@ const Home = ({ navigation }) => {
             {/* </SharedElement> */}
           </TouchableOpacity>
         </View>
-
-        <View style={search_button_container}>
-          <View style={[search_button_background]} />
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => {
-              console.log("Search Pressed");
-            }}>
-            <IonIcons name='microphone' color='rgb(20, 150, 255)' size={30} />
-          </TouchableOpacity>
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+          }}>
+          <View style={search_button_container}>
+            <View style={[search_button_background]} />
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={handleDocumentSelection}>
+              <IonIcons
+                name='cloud-upload'
+                color='rgb(20, 150, 255)'
+                size={30}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View
@@ -254,6 +289,24 @@ const Home = ({ navigation }) => {
             }}>
             <MaterialCommunityIcons
               name='arrow-left'
+              color='white'
+              size={NAV_BUTTONS_SIZE}
+            />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            position: "absolute",
+            top: 60,
+            right: 25,
+            alignItems: "center",
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <FontistoIcons
+              name='search'
               color='white'
               size={NAV_BUTTONS_SIZE}
             />

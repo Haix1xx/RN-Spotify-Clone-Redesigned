@@ -44,7 +44,7 @@ const MediaItem = ({
   const artistsNames = artists?.profile?.displayname;
   const secondsFromMs = durationMs / 1000;
   const isCurrentMediaItem = trackPlayer.currentTrack.url === previewUrl;
-  let imageUrl: string | undefined;
+  let imageUrl: string | undefined = previewUrl;
   if (albumImages.length > 0)
     imageUrl = albumImages[0].url !== "" ? albumImages[0].url : undefined;
   const onMediaItemHandler = async () => {

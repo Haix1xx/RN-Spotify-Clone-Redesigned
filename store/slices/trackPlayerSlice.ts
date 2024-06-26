@@ -22,7 +22,15 @@ const initialState = {
   },
   tracks: [] as any,
 };
-
+export const getPath = async (uri: string) => {
+  console.log("uri", JSON.stringify(uri, null, 2));
+  if (uri.startsWith("content://")) {
+    const originalFilepath = await RNFetchBlob.fs.stat(decodeURI(uri));
+    const wuri = `file://${originalFilepath.path}`;
+    return wuri;
+  }
+  return uri;
+};
 export const initAsync = createAsyncThunk("trackPlayer/init", async () => {
   await TrackPlayer.setupPlayer({});
 });
@@ -83,9 +91,9 @@ export const predictShazam = createAsyncThunk<any, any, { state: RootState }>(
     const accessToken = getState().auth.accessToken;
     const formData = new FormData();
     formData.append("audio", {
-      uri: song,
-      name: "output.aac",
-      type: "audio/aac",
+      uri: song.uri || song,
+      name: song.name || "output.aac",
+      type: song.type || "audio/aac",
     });
     try {
       const response = await fetch(
@@ -96,7 +104,10 @@ export const predictShazam = createAsyncThunk<any, any, { state: RootState }>(
           body: formData,
         },
       );
+      console.log("formData", JSON.stringify(formData, null, 2));
       let data = await response.json();
+      console.log("data", JSON.stringify(data, null, 2));
+
       if (!data?.data) {
         ToastAndroid.showWithGravity(
           "Not found song! ",
@@ -106,9 +117,9 @@ export const predictShazam = createAsyncThunk<any, any, { state: RootState }>(
       } else {
         dispatch(getTrack(data?.data?.trackId));
       }
-
       return data;
     } catch (error) {
+      console.log("error", JSON.stringify(error, null, 2));
       return rejectWithValue(error);
     }
   },
@@ -212,12 +223,12 @@ export const playPrevTrackAsync = createAsyncThunk<
     dispatch(resetPlayerAsync());
     dispatch(
       setCurrentTrackAsync({
-        id: nextTrack._id,
-        url: nextTrack.url,
-        title: nextTrack.title,
-        artist: nextTrack.artist?.displayname || " ",
-        artwork: nextTrack.coverPath,
-        duration: nextTrack.duration,
+        id: prevTrack._id,
+        url: prevTrack.url,
+        title: prevTrack.title,
+        artist: prevTrack.artist?.displayname || " ",
+        artwork: prevTrack.coverPath,
+        duration: prevTrack.duration,
       }),
     );
     dispatch(countStream(prevTrack.id));
